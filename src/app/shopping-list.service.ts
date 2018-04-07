@@ -39,7 +39,9 @@ export class ShoppingListService {
   }
 
   public edit(item) : Observable<Object>{
-    return this.httpClient.put(`${environment.firebase.databaseURL}/items/${item.key}.json`,item)
+    let key = item.key
+    delete item.key
+    return this.httpClient.patch(`${environment.firebase.databaseURL}/items/${key}.json`,item)
 
   }
 }
