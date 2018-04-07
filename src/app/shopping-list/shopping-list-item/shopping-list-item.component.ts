@@ -18,27 +18,12 @@ export class ShoppingListItemComponent implements OnInit {
   }
 
   public remove() {
-    this.myShoppingListService.remove(this.listItem).subscribe(
-      response => {
-        this.deleted = true
-      },
-      error => {
-
-      }
-    )
+    this.myShoppingListService.remove(this.listItem)
   }
 
   public crossItem() {
     this.myShoppingListService.edit(
-      { disabled: true, key: this.listItem.key, name: this.listItem.name }).subscribe(
-        response => {
-          console.log('Editou')
-          this.listItem.disabled=true
-        },
-        error => {
-
-        }
-      )
+      { disabled: true, key: this.listItem.key, name: this.listItem.name })
   }
 
 }

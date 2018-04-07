@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ShoppingListService } from '../shopping-list.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-shopping-list',
@@ -7,29 +8,30 @@ import { ShoppingListService } from '../shopping-list.service';
   styleUrls: ['./shopping-list.component.css']
 })
 export class ShoppingListComponent implements OnInit {
-  private listItems: Array<any>
+  private listItems: Observable<any[]>
 
   private itemToAdd: string = ''
 
   constructor(
     private myShoppingListService: ShoppingListService) {
-    this.myShoppingListService.findAll().subscribe(
-      response => {
-        if (response) {
-          this.listItems = Object.keys(response).map(id => {
-            let item: any = response[id]
-            item.key = id
-            return item
-          })
-        } else {
-          this.listItems = []
-        }
-      },
-      error => { console.error(error) }
-    )
+    //   this.myShoppingListService.findAll().subscribe(
+    //     response => {
+    //       if (response) {
+    //         this.listItems = Object.keys(response).map(id => {
+    //           let item: any = response[id]
+    //           item.key = id
+    //           return item
+    //         })
+    //       } else {
+    //         this.listItems = []
+    //       }
+    //     },
+    //     error => { console.error(error) }
+    //   )
   }
 
   ngOnInit() {
+    this.listItems = this.myShoppingListService.listItemsFirebase
   }
 
   private addObjectToList() {
@@ -37,17 +39,7 @@ export class ShoppingListComponent implements OnInit {
       name: this.itemToAdd,
       disabled: false
     }
-    
     this.myShoppingListService.add(newItem)
-      .subscribe(
-        response => {
-          newItem['key'] = response
-          this.listItems.unshift(newItem)
-        },
-        error => { console.log('Deu certo nao') }
-      )
-
-
   }
 
 }
