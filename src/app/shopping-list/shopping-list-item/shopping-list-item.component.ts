@@ -8,12 +8,37 @@ import { ShoppingListService } from '../../shopping-list.service';
 })
 export class ShoppingListItemComponent implements OnInit {
 
-  @Input("item") private listItem:any
+  @Input("item") private listItem: any
+  private deleted: boolean = false;
 
   constructor(private myShoppingListService: ShoppingListService) { }
 
   ngOnInit() {
     console.log(this.listItem)
+  }
+
+  public remove() {
+    this.myShoppingListService.remove(this.listItem).subscribe(
+      response => {
+        this.deleted = true
+      },
+      error => {
+
+      }
+    )
+  }
+
+  public crossItem() {
+    this.myShoppingListService.edit(
+      { disabled: true, key: this.listItem.key, name: this.listItem.name }).subscribe(
+        response => {
+          console.log('Editou')
+          this.listItem.disabled=true
+        },
+        error => {
+
+        }
+      )
   }
 
 }

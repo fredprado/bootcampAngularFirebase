@@ -8,23 +8,46 @@ import { ShoppingListService } from '../shopping-list.service';
 })
 export class ShoppingListComponent implements OnInit {
   private listItems: Array<any>
-  
+
   private itemToAdd: string = ''
 
   constructor(
     private myShoppingListService: ShoppingListService) {
-    this.listItems = myShoppingListService.findAll()
+    this.myShoppingListService.findAll().subscribe(
+      response => {
+        if (response) {
+          this.listItems = Object.keys(response).map(id => {
+            let item: any = response[id]
+            item.key = id
+            return item
+          })
+        } else {
+          this.listItems = []
+        }
+      },
+      error => { console.error(error) }
+    )
   }
 
   ngOnInit() {
   }
 
-  private addObjectToList(){
+  private addObjectToList() {
     let newItem = {
       name: this.itemToAdd,
       disabled: false
     }
+    
     this.myShoppingListService.add(newItem)
+      .subscribe(
+        response => {
+          newItem['key'] = response
+          this.listItems.unshift(newItem)
+        },
+        error => { console.log('Deu certo nao') }
+      )
+
+
   }
 
 }
